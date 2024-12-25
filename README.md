@@ -7,5 +7,3 @@ This repository contains solutions to the Computer Networks 2 Assignment on Acce
 - **part1_standard_access_list.txt**: Solution for Part 1 using standard access lists for Router B.
 - **part2_named_extended_access_list.txt**: Solution for Part 2 using named extended access lists for Router A.
 
-## Author
-Haneen
