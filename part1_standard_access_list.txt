@@ -1,0 +1,28 @@
+
+// Solution of Part1: Standard Access List for Router B
+//1.  a. For Engineering to Sales traffic
+#access-list 10 permit  172.16.50.99  0.0.0.0         // Permit  the host 172.16.50.99   
+#access-list 10 deny   172.16.50.96   0.0.0.15        // Deny hosts in the range 172.16.50.96 – 172.16.50.111
+#access-list 10 deny   172.16.50.45   0.0.0.0         // Deny the host 172.16.50.45 
+
+#access-list 10 permit  172.16.50.32  0.0.0.95        // Permit the hosts in the range 172.16.50.32 - 172.16.50.127 
+                                                      // This is a combination of two subranges:
+                                                      // [172.16.50.32 - 172.16.50.63] and [172.16.50.64 - 172.16.50.127]     
+
+
+#access-list 10 deny  172.16.50.0  0.0.0.127          // Deny the remaining range 172.16.50.0 ---- 172.16.50.127
+#access-list 10 deny  172.16.50.230  0.0.0.1          // Deny the hosts 172.16.50.230, 172.16.50.231
+#access-list 10 permit  172.16.50.0  0.0.0.255        // Permit  the remaining hosts Engineering
+
+// b. For Administration to Sales traffic
+#access-list 10 permit  172.16.10.33  0.0.0.0         // Permit  the host 172.16.10.33
+#access-list 10 deny  172.16.10.32  0.0.0.15          // Deny the range 172.16.10.32/28
+#access-list 10 permit  172.16.10.192 0.0.0.3         // Permit  the sub-range 172.16.10.192 /30 
+#access-list 10 deny  172.16.10.128  0.0.0.127        // Deny the range 172.16.10.128/25
+#access-list 10 permit  172.16.10.0  0.0.0.255        // Permit  the remaining hosts Administration
+
+//2. Assign the Standard List to the correct interface
+#interface e0
+#ip access_group 10 out
+// Apply the access list on e0 with ip access-group 10 out to filter traffic going to Sales. 
+// This placement avoids affecting Administration-to-Engineering traffic, as it applies only to outgoing traffic destined for Sales.
