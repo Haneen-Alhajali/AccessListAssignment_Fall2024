@@ -1,1 +1,41 @@
+// Solution of Part2: Extended Access List for Router A
+//UDP:
+#ip access-list extended RouterA
+#deny udp 172.16.30.22  0.0.0.0  172.16.10.16  0.0.0.4 // deny host 172.16.30.22 
+#permit udp 172.16.30.0  0.0.0.31  any                       // Allow UDP traffic from 172.16.30.0 –172.16.30.31
+
+#permit udp 172.16.50.0  0.0.0.127  172.16.10.0  0.0.0.255 gt 4999 
+//pemit 172.16.50.0/25 to any destination if the port number is greater than or equal 5000
+
+#deny udp 172.16.30.0  0.0.0.255  172.16.10.0  0.0.0.255 
+#deny udp 172.16.50.0  0.0.0.255  172.16.10.0  0.0.0.255 
+//deny all other UDP traffic from Sales or Engineering
+
+
+//TCP:
+#permit tcp any  172.16.10.3  0.0.0.0 eq 80 
+#permit tcp any  172.16.10.3  0.0.0.0 eq 443
+// Allow WEB from any source if the destination is the Web server 172.16.10.3
+
+#deny tcp 172.16.30.0  0.0.0.255  172.16.10.0  0.0.0.127
+#deny tcp 72.16.50.0  0.0.0.255  172.16.10.0  0.0.0.127
+//Deny TCP from either 172.16.30.0/24 or 172.16.50.0/24
+
+#permit tcp 172.16.30.0  0.0.0.255  172.16.10.2  0.0.0.0 eq 25
+#deny tcp 172.16.50.0  0.0.0.255  172.16.10.2  0.0.0.0 eq 25
+//Allow email from the Sales Network if the destination is the email server 172.16.10.2. But deny it from Engineering network
+
+#permit tcp 172.16.50.0  0.0.44.255  any
+// Allow other TCP traffic from Sales or Engineering
+
+// ICMP:
+#permit  ICMP  any  any
+// allow ICMP traffic from Sales and Engineering to any destination
+
+#deny  ip  any  any             
+//deny any other traffic from Sales and Engineering
+
+#interface e0
+#ip access_group RouterA in
+// Apply the access list on e0 with ip access-group 10 in to filter traffic going to Administration. 
 
